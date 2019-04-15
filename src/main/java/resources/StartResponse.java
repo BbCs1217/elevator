@@ -3,9 +3,9 @@ package resources;
 import java.io.Serializable;
 import java.util.List;
 
-public class CallResponse implements Serializable {
+public class StartResponse implements Serializable {
     String token;
+    int timestamp;
     List<Elevator> elevators;
-    List<Call> calls;
     boolean is_end;
 }
