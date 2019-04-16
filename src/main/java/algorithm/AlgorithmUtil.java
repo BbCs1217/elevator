@@ -21,7 +21,7 @@ public class AlgorithmUtil {
             c.setCommand(CommandEnum.DOWN);
 
         int diff = Math.abs(current - dest);
-        for(int i = 0; i < diff; i++) {
+        for (int i = 0; i < diff; i++) {
             ret.add(c);
         }
         Command stop = new Command();
@@ -32,8 +32,8 @@ public class AlgorithmUtil {
     }
 
     public Elevator getElevator(CallResponse response, int elevatorId) {
-        for(Elevator e : response.getElevators()) {
-            if(e.getId() == elevatorId)
+        for (Elevator e : response.getElevators()) {
+            if (e.getId() == elevatorId)
                 return e;
         }
         return null;

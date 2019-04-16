@@ -14,29 +14,29 @@ public class HttpHelper {
             URL connURL = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) connURL.openConnection();
 
-            if(sendType == SendType.GET) {
+            if (sendType == SendType.GET) {
                 conn.setDoOutput(false);
-            } else if(sendType == SendType.POST) {
+            } else if (sendType == SendType.POST) {
                 conn.setDoOutput(true);
             }
             conn.setRequestMethod(sendType.name());
-            if(headers != null) {
+            if (headers != null) {
                 for (Map.Entry<String, String> e : headers.entrySet()) {
                     conn.addRequestProperty(e.getKey(), e.getValue());
                 }
             }
 
-            if(params != null) {
+            if (params != null) {
                 try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
                     wr.write(params.getBytes());
                 }
             }
             StringBuilder builder;
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                 String line;
                 builder = new StringBuilder();
 
-                while((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
                     builder.append(line);
                     builder.append(System.lineSeparator());
                 }
@@ -46,6 +46,7 @@ public class HttpHelper {
             return null;
         }
     }
+
     public String getParamsString(Map<String, String> params)
             throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();

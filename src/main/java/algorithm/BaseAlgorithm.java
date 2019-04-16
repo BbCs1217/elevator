@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Queue;
 
 public abstract class BaseAlgorithm implements ElevatorAlgorithm {
+    int minFloor = 1;
+    int maxFloor;
     int elevatorMaxPassenger = 8;
     int elevatorCounter;
     List<Queue<Command>> elevatorCommands = new ArrayList<>();
 
-    public BaseAlgorithm(int elevatorCounter) {
+    public BaseAlgorithm(int elevatorCounter, int maxFloor) {
         this.elevatorCounter = elevatorCounter;
-        for(int i = 0; i < elevatorCounter; i++) {
+        this.maxFloor = maxFloor;
+        for (int i = 0; i < elevatorCounter; i++) {
             elevatorCommands.add(new LinkedList<>());
         }
     }

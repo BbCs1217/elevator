@@ -12,9 +12,11 @@ import java.util.Map;
 
 public class ApiCaller {
     private String baseURL;
+
     public ApiCaller(String baseURL) {
         this.baseURL = baseURL;
     }
+
     public String start(String userKey, int problemNumber, int elevatorCounter) throws UnsupportedEncodingException {
         Map<String, String> params = new HashMap<>();
         params.put("user_key", userKey);
@@ -36,7 +38,7 @@ public class ApiCaller {
         Map<String, String> header = new HashMap<>();
         header.put("X-Auth-Token", token);
         HttpHelper helper = new HttpHelper();
-        String response = helper.send(SendType.GET,  baseURL + "oncalls", header, null);
+        String response = helper.send(SendType.GET, baseURL + "oncalls", header, null);
         ObjectMapper mapper = new ObjectMapper();
         CallResponse callResponse = null;
         try {
@@ -50,6 +52,7 @@ public class ApiCaller {
     public ActionResponse action(String token, CommandRequest request) throws JsonProcessingException {
         return action(token, request.getCommands());
     }
+
     public ActionResponse action(String token, List<Command> commands) throws JsonProcessingException {
         Map<String, String> header = new HashMap<>();
         header.put("X-Auth-Token", token);

@@ -2,10 +2,8 @@ package algorithm;
 
 import resources.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CollectiveAlgorithm extends BaseAlgorithm {
     public enum Direction {
@@ -15,13 +13,16 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
     Direction[] elevatorDirection;
     Direction[] elevatorDirectionPrev;
     Map<Integer, List<Call>> allCalls = new HashMap<>();
+    int[] processingFloor;
 
-    public CollectiveAlgorithm(int elevatorCounter) {
-        super(elevatorCounter);
+    public CollectiveAlgorithm(int elevatorCounter, int maxFloor) {
+        super(elevatorCounter, maxFloor);
         elevatorDirection = new Direction[elevatorCounter];
         elevatorDirectionPrev = new Direction[elevatorCounter];
+        processingFloor = new int[elevatorCounter];
         for (int i = 0; i < elevatorCounter; i++) {
             elevatorDirection[i] = elevatorDirectionPrev[i] = Direction.STOP;
+            processingFloor[i] = 0;
         }
     }
 
@@ -47,19 +48,38 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
             int[] exitCalls = getExitCall(e);
             int[] enterCalls = getEnterCall(e);
             int[] enterReverseCalls = getReverseEnterCall(e);
+            List<Integer> processingEnterCall = new ArrayList<>();
+            for(Command c : commands) {
+                if(c.getCommand() == CommandEnum.ENTER) {
+                    for(int i : c.getCall_ids()) {
+                        processingEnterCall.add(i);
+                    }
+                }
+            }
+            List<Integer> tempEnterCall = Arrays.stream(enterCalls).boxed().collect(Collectors.toList());
+            tempEnterCall.removeAll(processingEnterCall);
+            enterCalls = tempEnterCall.stream().mapToInt(Integer::intValue).toArray();
+            tempEnterCall = Arrays.stream(enterReverseCalls).boxed().collect(Collectors.toList());
+            tempEnterCall.removeAll(processingEnterCall);
+            enterReverseCalls = tempEnterCall.stream().mapToInt(Integer::intValue).toArray();
+
             boolean reverseEnter = (e.getPassengers().size() == 0 && enterReverseCalls.length != 0);
             Status s = e.getStatus();
             //올라가거나 내려가는중이면
             if (s == Status.UPWARD || s == Status.DOWNWARD) {
-                //현재층에 내리거나 탈사람이 있으면 중지
-                if ((exitCalls.length != 0 || enterCalls.length != 0) || reverseEnter) {
-                    if (reverseEnter)
-                        elevatorDirectionPrev[e.getId()] = elevatorDirectionPrev[e.getId()] == Direction.UP ? Direction.DOWN : Direction.UP;
-                    elevatorDirection[e.getId()] = Direction.STOP;
+                if((s == Status.UPWARD && e.getFloor() == maxFloor) || (s == Status.DOWNWARD && e.getFloor() == minFloor)) {
                     nextCommand = CommandEnum.STOP;
                 } else {
-                    //내리거나 탈사람 없으면 계속 감
-                    nextCommand = e.getStatus() == Status.UPWARD ? CommandEnum.UP : CommandEnum.DOWN;
+                    //현재층에 내리거나 탈사람이 있으면 중지
+                    if ((exitCalls.length != 0 || enterCalls.length != 0) || reverseEnter) {
+                        if (reverseEnter)
+                            elevatorDirectionPrev[e.getId()] = elevatorDirectionPrev[e.getId()] == Direction.UP ? Direction.DOWN : Direction.UP;
+                        elevatorDirection[e.getId()] = Direction.STOP;
+                        nextCommand = CommandEnum.STOP;
+                    } else {
+                        //내리거나 탈사람 없으면 계속 감
+                        nextCommand = e.getStatus() == Status.UPWARD ? CommandEnum.UP : CommandEnum.DOWN;
+                    }
                 }
             } else { //멈춤상태이면
                 switch (s) {
@@ -193,7 +213,7 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
         List<Integer> calls = new ArrayList<>();
         for (Call call : allCalls.get(e.getFloor())) {
             if (direction == getDirection(call.getStart(), call.getEnd())) {
-                if(++passengerCnt > elevatorMaxPassenger)
+                if (++passengerCnt > elevatorMaxPassenger)
                     break;
                 calls.add(call.getId());
             }
