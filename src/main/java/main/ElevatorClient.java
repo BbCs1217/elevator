@@ -15,7 +15,7 @@ public class ElevatorClient {
         String baseURL = System.getenv().getOrDefault("ELEVATOR_BASE_URL", "http://localhost/");
         String userKey = System.getenv().getOrDefault("ELEVATOR_USER_KEY", "guest");
         int problemNumber = 1;
-        int elevatorCounter = 1;
+        int elevatorCounter = 4;
         ApiCaller caller = new ApiCaller(baseURL);
         String token = caller.start(userKey, problemNumber, elevatorCounter);
         System.out.println("TOKEN : " + token);

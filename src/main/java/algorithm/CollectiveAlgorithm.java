@@ -2,10 +2,8 @@ package algorithm;
 
 import resources.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CollectiveAlgorithm extends BaseAlgorithm {
     public enum Direction {
@@ -15,13 +13,16 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
     Direction[] elevatorDirection;
     Direction[] elevatorDirectionPrev;
     Map<Integer, List<Call>> allCalls = new HashMap<>();
+    int[] processingFloor;
 
     public CollectiveAlgorithm(int elevatorCounter) {
         super(elevatorCounter);
         elevatorDirection = new Direction[elevatorCounter];
         elevatorDirectionPrev = new Direction[elevatorCounter];
+        processingFloor = new int[elevatorCounter];
         for (int i = 0; i < elevatorCounter; i++) {
             elevatorDirection[i] = elevatorDirectionPrev[i] = Direction.STOP;
+            processingFloor[i] = 0;
         }
     }
 
@@ -47,6 +48,21 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
             int[] exitCalls = getExitCall(e);
             int[] enterCalls = getEnterCall(e);
             int[] enterReverseCalls = getReverseEnterCall(e);
+            List<Integer> processingEnterCall = new ArrayList<>();
+            for(Command c : commands) {
+                if(c.getCommand() == CommandEnum.ENTER) {
+                    for(int i : c.getCall_ids()) {
+                        processingEnterCall.add(i);
+                    }
+                }
+            }
+            List<Integer> tempEnterCall = Arrays.stream(enterCalls).boxed().collect(Collectors.toList());
+            tempEnterCall.removeAll(processingEnterCall);
+            enterCalls = tempEnterCall.stream().mapToInt(Integer::intValue).toArray();
+            tempEnterCall = Arrays.stream(enterReverseCalls).boxed().collect(Collectors.toList());
+            tempEnterCall.removeAll(processingEnterCall);
+            enterReverseCalls = tempEnterCall.stream().mapToInt(Integer::intValue).toArray();
+
             boolean reverseEnter = (e.getPassengers().size() == 0 && enterReverseCalls.length != 0);
             Status s = e.getStatus();
             //올라가거나 내려가는중이면
