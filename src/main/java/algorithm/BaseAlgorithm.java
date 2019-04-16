@@ -14,7 +14,7 @@ public abstract class BaseAlgorithm implements ElevatorAlgorithm {
 
     public BaseAlgorithm(int elevatorCounter) {
         this.elevatorCounter = elevatorCounter;
-        for(int i = 0; i < elevatorCounter; i++) {
+        for (int i = 0; i < elevatorCounter; i++) {
             elevatorCommands.add(new LinkedList<>());
         }
     }

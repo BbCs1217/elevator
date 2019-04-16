@@ -16,30 +16,30 @@ public class FIFOAlgorithm extends BaseAlgorithm {
 
     @Override
     public CommandRequest getNextCommand(CallResponse allCalls) {
-        for(Call c : allCalls.getCalls()) {
-            if(!checker.containsKey(c.getId())) {
+        for (Call c : allCalls.getCalls()) {
+            if (!checker.containsKey(c.getId())) {
                 boolean cont = false;
-                for(Map.Entry<Integer, Integer> e : processing.entrySet()) {
-                    if(e.getValue() == c.getId())
+                for (Map.Entry<Integer, Integer> e : processing.entrySet()) {
+                    if (e.getValue() == c.getId())
                         cont = true;
                 }
-                if(cont)
+                if (cont)
                     continue;
                 calls.add(c);
                 checker.put(c.getId(), c);
             }
         }
-        for(int i = 0; i < elevatorCounter; i++) {
+        for (int i = 0; i < elevatorCounter; i++) {
             Queue<Command> q = elevatorCommands.get(i);
-            if(q.size() == 0) {
+            if (q.size() == 0) {
                 processing.remove(i);
                 Call c = calls.peek();
-                if(c == null) {
+                if (c == null) {
                     Command stop = new Command();
                     stop.setElevator_id(i);
                     stop.setCommand(CommandEnum.STOP);
                     q.add(stop);
-                   continue;
+                    continue;
                 }
                 calls.remove(c);
                 checker.remove(c.getId());
@@ -71,8 +71,8 @@ public class FIFOAlgorithm extends BaseAlgorithm {
 
         CommandRequest request = new CommandRequest();
         List<Command> commands = new ArrayList<>();
-        for(Queue<Command> q : elevatorCommands) {
-            if(q.size() != 0) {
+        for (Queue<Command> q : elevatorCommands) {
+            if (q.size() != 0) {
                 Command c = q.poll();
                 commands.add(c);
             }

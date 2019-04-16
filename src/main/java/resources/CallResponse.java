@@ -54,15 +54,15 @@ public class CallResponse implements Serializable {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Elevators\n");
-        for(Elevator e : getElevators()) {
+        for (Elevator e : getElevators()) {
             builder.append("ID[").append(e.getId()).append("] STATUS[").append(e.getStatus().name()).append("] FLOOR[").append(e.getFloor()).append("]\n");
             builder.append("\tPassengers\n");
-            for(Call c : e.getPassengers()) {
+            for (Call c : e.getPassengers()) {
                 builder.append("\t[").append(c.getId()).append("] START[").append(c.getStart()).append("} END[").append(c.getEnd()).append("]\n");
             }
         }
         builder.append("Calls\n");
-        for(Call c : getCalls()) {
+        for (Call c : getCalls()) {
             builder.append("\t[").append(c.getId()).append("] START[").append(c.getStart()).append("} END[").append(c.getEnd()).append("]\n");
         }
         return builder.toString();

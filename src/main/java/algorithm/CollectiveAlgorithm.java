@@ -193,7 +193,7 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
         List<Integer> calls = new ArrayList<>();
         for (Call call : allCalls.get(e.getFloor())) {
             if (direction == getDirection(call.getStart(), call.getEnd())) {
-                if(++passengerCnt > elevatorMaxPassenger)
+                if (++passengerCnt > elevatorMaxPassenger)
                     break;
                 calls.add(call.getId());
             }
