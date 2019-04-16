@@ -1,35 +1,46 @@
 package main;
 
+import Algorithm.ElevatorAlgorithm;
+import Algorithm.ElevatorAlgorithmFactory;
 import api.ApiCaller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import resources.ActionResponse;
 import resources.CallResponse;
-import resources.Command;
-import resources.CommandEnum;
+import resources.CommandRequest;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ElevatorClient {
-    public static void main(String[] args) throws UnsupportedEncodingException, JsonProcessingException {
+    public static void main(String[] args) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
         String baseURL = System.getenv().getOrDefault("ELEVATOR_BASE_URL", "http://localhost/");
         String userKey = System.getenv().getOrDefault("ELEVATOR_USER_KEY", "guest");
-        int problemNumber = 0;
-        int elevatorCounter = 1;
+        int problemNumber = 1;
+        int elevatorCounter = 4;
         ApiCaller caller = new ApiCaller(baseURL);
         String token = caller.start(userKey, problemNumber, elevatorCounter);
         System.out.println("TOKEN : " + token);
 
-        CallResponse callResponse = caller.oncalls(token);
-        System.out.println(callResponse.toString());
-
-        List<Command> commands = new ArrayList<>();
-        Command c = new Command();
-        c.setCommand(CommandEnum.UP);
-        commands.add(c);
-        ActionResponse actionResponse = caller.action(token, commands);
-        callResponse = caller.oncalls(token);
-        System.out.println(callResponse.toString());
+        int timestamp = 0;
+        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.FIFO, elevatorCounter);
+        boolean end = false;
+        while (end == false) {
+            Thread.sleep(50);
+            System.out.println(timestamp);
+            CallResponse callResponse = caller.oncalls(token);
+            CommandRequest request = algorithm.getNextCommand(callResponse);
+            ActionResponse actionResponse = caller.action(token, request);
+            end = actionResponse.isIs_end();
+            timestamp = actionResponse.getTimestamp();
+        }
+        System.out.println("ENDS");
+//        System.out.println(callResponse.toString());
+//
+//        List<Command> commands = new ArrayList<>();
+//        Command c = new Command();
+//        c.setCommand(CommandEnum.UP);
+//        commands.add(c);
+//        ActionResponse actionResponse = caller.action(token, commands);
+//        callResponse = caller.oncalls(token);
+//        System.out.println(callResponse.toString());
     }
 }

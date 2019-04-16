@@ -1,5 +1,5 @@
 package resources;
 
 public enum Status {
-    UPWARD, STOPPED, OPEND, DOWNWARD
+    UPWARD, STOPPED, OPENED, DOWNWARD
 }
