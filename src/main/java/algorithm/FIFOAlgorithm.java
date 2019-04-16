@@ -1,11 +1,10 @@
-package Algorithm;
+package algorithm;
 
 import resources.*;
 
 import java.util.*;
 
 public class FIFOAlgorithm extends BaseAlgorithm {
-    List<Queue<Command>> elevatorCommands = new ArrayList<>();
     Map<Integer, Call> checker = new HashMap<>();
     Map<Integer, Integer> processing = new HashMap<>();
     Queue<Call> calls = new LinkedList<>();
@@ -13,9 +12,6 @@ public class FIFOAlgorithm extends BaseAlgorithm {
 
     public FIFOAlgorithm(int elevatorCounter) {
         super(elevatorCounter);
-        for(int i = 0; i < elevatorCounter; i++) {
-            elevatorCommands.add(new LinkedList<>());
-        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package Algorithm;
+package algorithm;
 
 import resources.CallResponse;
 import resources.CommandRequest;

@@ -1,7 +1,7 @@
 package main;
 
-import Algorithm.ElevatorAlgorithm;
-import Algorithm.ElevatorAlgorithmFactory;
+import algorithm.ElevatorAlgorithm;
+import algorithm.ElevatorAlgorithmFactory;
 import api.ApiCaller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import resources.ActionResponse;
@@ -15,13 +15,14 @@ public class ElevatorClient {
         String baseURL = System.getenv().getOrDefault("ELEVATOR_BASE_URL", "http://localhost/");
         String userKey = System.getenv().getOrDefault("ELEVATOR_USER_KEY", "guest");
         int problemNumber = 1;
-        int elevatorCounter = 4;
+        int elevatorCounter = 1;
         ApiCaller caller = new ApiCaller(baseURL);
         String token = caller.start(userKey, problemNumber, elevatorCounter);
         System.out.println("TOKEN : " + token);
 
         int timestamp = 0;
-        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.FIFO, elevatorCounter);
+//        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.FIFO, elevatorCounter);
+        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.COLLECTIVE, elevatorCounter);
         boolean end = false;
         while (end == false) {
             Thread.sleep(50);
