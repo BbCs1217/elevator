@@ -1,4 +1,4 @@
-package Algorithm;
+package algorithm;
 
 public class ElevatorAlgorithmFactory {
     public static ElevatorAlgorithm getElevatorAlgorithm(ElevatorAlgorithm.Method method, int elevatorCounter) {
