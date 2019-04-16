@@ -47,6 +47,9 @@ public class ApiCaller {
         return callResponse;
     }
 
+    public ActionResponse action(String token, CommandRequest request) throws JsonProcessingException {
+        return action(token, request.getCommands());
+    }
     public ActionResponse action(String token, List<Command> commands) throws JsonProcessingException {
         Map<String, String> header = new HashMap<>();
         header.put("X-Auth-Token", token);

@@ -1,12 +1,12 @@
 package Algorithm;
 
 public class ElevatorAlgorithmFactory {
-    public static ElevatorAlgorithm getElevatorAlgorithm(ElevatorAlgorithm.Method method) {
+    public static ElevatorAlgorithm getElevatorAlgorithm(ElevatorAlgorithm.Method method, int elevatorCounter) {
         switch (method) {
             case FIFO:
-                return new FIFOAlghrithm();
+                return new FIFOAlgorithm(elevatorCounter);
             case COLLECTIVE:
-                return new CollectiveAlgorithm();
+                return new CollectiveAlgorithm(elevatorCounter);
         }
         return null;
     }
