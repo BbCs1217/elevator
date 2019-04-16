@@ -10,8 +10,8 @@ public class FIFOAlgorithm extends BaseAlgorithm {
     Queue<Call> calls = new LinkedList<>();
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
 
-    public FIFOAlgorithm(int elevatorCounter) {
-        super(elevatorCounter);
+    public FIFOAlgorithm(int elevatorCounter, int maxFloor) {
+        super(elevatorCounter, maxFloor);
     }
 
     @Override

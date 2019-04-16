@@ -14,7 +14,8 @@ public class ElevatorClient {
     public static void main(String[] args) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException {
         String baseURL = System.getenv().getOrDefault("ELEVATOR_BASE_URL", "http://localhost/");
         String userKey = System.getenv().getOrDefault("ELEVATOR_USER_KEY", "guest");
-        int problemNumber = 1;
+        int problemNumber = 2;
+        int[] maxFloors = {6, 25, 25};
         int elevatorCounter = 4;
         ApiCaller caller = new ApiCaller(baseURL);
         String token = caller.start(userKey, problemNumber, elevatorCounter);
@@ -22,10 +23,10 @@ public class ElevatorClient {
 
         int timestamp = 0;
 //        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.FIFO, elevatorCounter);
-        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.COLLECTIVE, elevatorCounter);
+        ElevatorAlgorithm algorithm = ElevatorAlgorithmFactory.getElevatorAlgorithm(ElevatorAlgorithm.Method.COLLECTIVE, elevatorCounter, maxFloors[problemNumber]);
         boolean end = false;
         while (end == false) {
-            Thread.sleep(50);
+            Thread.sleep(10);
             System.out.println(timestamp);
             CallResponse callResponse = caller.oncalls(token);
             CommandRequest request = algorithm.getNextCommand(callResponse);

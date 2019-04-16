@@ -15,8 +15,8 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
     Map<Integer, List<Call>> allCalls = new HashMap<>();
     int[] processingFloor;
 
-    public CollectiveAlgorithm(int elevatorCounter) {
-        super(elevatorCounter);
+    public CollectiveAlgorithm(int elevatorCounter, int maxFloor) {
+        super(elevatorCounter, maxFloor);
         elevatorDirection = new Direction[elevatorCounter];
         elevatorDirectionPrev = new Direction[elevatorCounter];
         processingFloor = new int[elevatorCounter];
@@ -67,15 +67,19 @@ public class CollectiveAlgorithm extends BaseAlgorithm {
             Status s = e.getStatus();
             //올라가거나 내려가는중이면
             if (s == Status.UPWARD || s == Status.DOWNWARD) {
-                //현재층에 내리거나 탈사람이 있으면 중지
-                if ((exitCalls.length != 0 || enterCalls.length != 0) || reverseEnter) {
-                    if (reverseEnter)
-                        elevatorDirectionPrev[e.getId()] = elevatorDirectionPrev[e.getId()] == Direction.UP ? Direction.DOWN : Direction.UP;
-                    elevatorDirection[e.getId()] = Direction.STOP;
+                if((s == Status.UPWARD && e.getFloor() == maxFloor) || (s == Status.DOWNWARD && e.getFloor() == minFloor)) {
                     nextCommand = CommandEnum.STOP;
                 } else {
-                    //내리거나 탈사람 없으면 계속 감
-                    nextCommand = e.getStatus() == Status.UPWARD ? CommandEnum.UP : CommandEnum.DOWN;
+                    //현재층에 내리거나 탈사람이 있으면 중지
+                    if ((exitCalls.length != 0 || enterCalls.length != 0) || reverseEnter) {
+                        if (reverseEnter)
+                            elevatorDirectionPrev[e.getId()] = elevatorDirectionPrev[e.getId()] == Direction.UP ? Direction.DOWN : Direction.UP;
+                        elevatorDirection[e.getId()] = Direction.STOP;
+                        nextCommand = CommandEnum.STOP;
+                    } else {
+                        //내리거나 탈사람 없으면 계속 감
+                        nextCommand = e.getStatus() == Status.UPWARD ? CommandEnum.UP : CommandEnum.DOWN;
+                    }
                 }
             } else { //멈춤상태이면
                 switch (s) {
